@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 
+// Function declarations for tests
 void testTshirtSize();
 void testPrintColorMap();
 void testWeatherReport();
@@ -15,3 +16,9 @@ TEST(ColorMap, Print) {
 TEST(WeatherReport, Report) {
     testWeatherReport();
 }
+
+int main(int argc, char **argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+
