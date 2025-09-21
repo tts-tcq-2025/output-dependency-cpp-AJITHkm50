@@ -45,13 +45,41 @@ namespace WeatherSpace
     string Report(const IWeatherSensor& sensor)
     {
         int precipitation = sensor.Precipitation();
+        double temperature = sensor.TemperatureInC();
+        int windSpeed = sensor.WindSpeedKMPH();
         string report = "Sunny Day";
 
-        if (sensor.TemperatureInC() > 25)
+        // Early warning logic (Extension 1)
+        // Example temperature limits: 0 (low), 40 (high)
+        double tempLow = 0.0, tempHigh = 40.0;
+        double tempWarnTol = 0.015 * tempHigh;
+        if (temperature >= tempLow && temperature < tempLow + tempWarnTol)
+            std::cout << "Warning: Approaching hypothermia\n";
+        if (temperature > tempHigh - tempWarnTol && temperature <= tempHigh)
+            std::cout << "Warning: Approaching hyperthermia\n";
+
+        // Example precipitation limits: 0 (low), 100 (high)
+        int precipLow = 0, precipHigh = 100;
+        double precipWarnTol = 0.015 * precipHigh;
+        if (precipitation >= precipLow && precipitation < precipLow + precipWarnTol)
+            std::cout << "Warning: Approaching low precipitation\n";
+        if (precipitation > precipHigh - precipWarnTol && precipitation <= precipHigh)
+            std::cout << "Warning: Approaching high precipitation\n";
+
+        // Example wind speed limits: 0 (low), 100 (high)
+        int windLow = 0, windHigh = 100;
+        double windWarnTol = 0.015 * windHigh;
+        if (windSpeed >= windLow && windSpeed < windLow + windWarnTol)
+            std::cout << "Warning: Approaching calm wind\n";
+        if (windSpeed > windHigh - windWarnTol && windSpeed <= windHigh)
+            std::cout << "Warning: Approaching stormy wind\n";
+
+        // Original buggy logic (unchanged)
+        if (temperature > 25)
         {
             if (precipitation >= 20 && precipitation < 60)
                 report = "Partly Cloudy";
-            else if (sensor.WindSpeedKMPH() > 50)
+            else if (windSpeed > 50)
                 report = "Alert, Stormy with heavy rain";
         }
         return report;
